@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+require('colors');
+
+require('../src/env.js');
+
+if (process.send) {
+    require('../src')();
+} else {
+    require('./start.js')();
+}

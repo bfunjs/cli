@@ -1,0 +1,6 @@
+.idea
+.templates
+dist
+node_modules
+lib
+loaders
