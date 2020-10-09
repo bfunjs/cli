@@ -1,0 +1,13 @@
+.idea/
+.templates
+dist
+docs
+packages
+scripts
+tests
+.eslintignore
+.eslintrc.js
+.gitignore
+.npmignore
+rollup.config.js
+tsconfig.json

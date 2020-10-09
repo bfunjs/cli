@@ -1,0 +1,38 @@
+{
+  "questions": [
+    {
+      "type": "input",
+      "message": "请输入初始页面名",
+      "name": "page",
+      "default": ":page"
+    },
+    {
+      "type": "list",
+      "name": "type",
+      "message": "请选择模板",
+      "choices": [
+        "SSR页面/服务端渲染",
+        "普通页面/单页应用"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "match": [
+        "",
+        "SSR页面/服务端渲染"
+      ],
+      "repo": {
+        "type": "tar",
+        "url": "https://github.com/bfunjs/bfun-templates/blob/master/dist/vue-page-ssr.tar?raw=true"
+      }
+    },
+    {
+      "match": [],
+      "repo": {
+        "type": "tar",
+        "url": "https://github.com/bfunjs/bfun-templates/blob/master/dist/vue-page-static.tar?raw=true"
+      }
+    }
+  ]
+}

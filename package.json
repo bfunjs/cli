@@ -1,0 +1,75 @@
+{
+  "name": "@bfun/cli",
+  "version": "3.2.1",
+  "description": "@bfun/cli",
+  "workspaces": [
+    "packages/*"
+  ],
+  "main": "src/common/index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "clean": "rimraf loaders",
+    "build": "npm run clean && node ./scripts/build.js",
+    "cli:beta": "npm publish --access=public --tag=beta",
+    "release": "npm run build && npm publish --access public",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "bin": {
+    "bfun": "./bin/bfun"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bfunjs/cli.git"
+  },
+  "keywords": [
+    "bfun",
+    "cli"
+  ],
+  "author": "suibinc@qq.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bfunjs/cli/issues"
+  },
+  "homepage": "https://github.com/bfunjs/cli#readme",
+  "dependencies": {
+    "@bfun/fetch": "1",
+    "@bfun/runtime": "1",
+    "@bfun/solution-component": "1",
+    "@bfun/solution-package": "1",
+    "@bfun/utils": "1",
+    "chokidar": "3",
+    "colors": "1",
+    "commander": "3",
+    "compare-versions": "3",
+    "download-git-repo": "2",
+    "handlebars": ">=4.0.14",
+    "inquirer": "7",
+    "lodash": "4",
+    "map-stream": "0",
+    "md5": "2",
+    "ora": "4",
+    "portfinder": "1",
+    "rimraf": "3",
+    "tar-fs": "2",
+    "vinyl-fs": "3",
+    "write-json": "3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "4",
+    "@types/node": "^13.13.5",
+    "eslint": "6",
+    "rollup": "latest",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.27.1",
+    "typescript": "3",
+    "vuepress": "1"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "git add"
+    ]
+  }
+}

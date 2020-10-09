@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "target": "es5",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "allowJs": true,
+    "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "declaration": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ]
+  },
+  "include": [
+    "packages/bfun/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "compileOnSave": false
+}
