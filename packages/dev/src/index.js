@@ -18,16 +18,19 @@ async function dev(ctx, next) {
     await execBfunSolutions(ctx, next, command);
 }
 
-export const when = [command];
+export const when = [ command ];
 
 export function bfun(use) {
     use(command).option('-c, --config [config]', 'config filepath')
+        .option('--type [type]', 'devServer type, default: function')
+        .option('--vue [vue]', 'devServer type [vue]')
+        .option('--react [react]', 'devServer type [react]')
         .option('-h, --host [host]', 'host')
         .option('-p, --port [port]', 'port');
     return {
         [command]: {
-            before: [initEnv, readBConfig],
-            execute: [dev],
+            before: [ initEnv, readBConfig ],
+            execute: [ dev ],
         },
     };
 }

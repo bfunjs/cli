@@ -16,7 +16,7 @@ async function pre(ctx, next) {
     await next();
 
     const { args, questions } = ctx;
-    const [tmpl, appName] = args;
+    const [ tmpl, appName ] = args;
 
     ctx.dist = appName ? path.join(global.rootDir, appName) : global.rootDir;
     const basename = path.basename(ctx.dist);
@@ -79,7 +79,7 @@ async function run(ctx, next) {
                 fs.writeFileSync(file.path, result);
             }
         };
-        const globs = ['**/*.*', '!node_modules/**', '!.git/**', '!.idea/**'];
+        const globs = [ '**/*.*', '!node_modules/**', '!.git/**', '!.idea/**' ];
         const data = ctx.data || {};
         await file.each(globs, (file, cb) => {
             callback(file, data);
@@ -99,14 +99,14 @@ async function rename(ctx, next) {
     await next();
 }
 
-export const when = [command];
+export const when = [ command ];
 
 export function bfun(use) {
     use(command);
     return {
         [command]: {
-            before: [pre],
-            execute: [run, rename],
+            before: [ pre ],
+            execute: [ run, rename ],
         },
     };
 }

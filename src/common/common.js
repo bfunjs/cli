@@ -28,7 +28,7 @@ async function readBConfig(ctx, next) {
         process.exit(1);
     }
     if (!ctx.bConfig.framework) ctx.bConfig.framework = 'webpack';
-    process.env.DEBUG = ctx.bConfig.debug || false;
+    process.env.DEBUG = ctx.bConfig.debug || true;
 
     await next();
 }
@@ -36,7 +36,7 @@ async function readBConfig(ctx, next) {
 function findIfExists(name) {
     try {
         const { rootDir } = global;
-        return require.resolve(name, { paths: [rootDir] });
+        return require.resolve(name, { paths: [ rootDir ] });
     } catch (e) {
         return false;
     }
@@ -50,10 +50,11 @@ async function autoDetectConfig(ctx) {
             const { required = [] } = require(name);
             return {
                 framework: required[0] || '',
-                solutions: [name],
+                solutions: [ name ],
             };
         } catch (e) {
-            logger.error(`solution: ${name} 不存在`);
+            logger.error(`require solution<${name}> failed`);
+            logger.error(e);
             process.exit(1);
         }
     }
@@ -66,26 +67,32 @@ async function autoDetectConfig(ctx) {
     } else if (findIfExists('rollup')) {
         return {
             framework: 'rollup',
-            solutions: ['@bfun/solution-rollup2'],
+            solutions: [ '@bfun/solution-rollup2' ],
         };
     }
     return global.bConfig.defaultBConfig;
 }
 
-function autoDetectJsEntry(v, main = 'main') {
-    let entry = (typeof v === 'object' && Object.keys(v).length < 1) ? undefined : v;
+function autoDetectJsEntry(target, options = {}) {
+    const { main = 'main' } = options;
+    let entry = (typeof target === 'object' && Object.keys(target).length < 1) ? undefined : target;
     if (!entry || typeof entry === 'string') {
         if (typeof entry === 'string') {
             if (fs.existsSync(entry)) return { [main]: entry };
         }
-        const filename = entry || 'index.js';
-        const filepath = path.join(global.configDir || process.cwd());
-        const entryJs = path.join(filepath, 'src', filename);
-        if (fs.existsSync(entryJs)) {
-            return { [main]: entryJs };
-        } else {
-            return { [main]: path.join(filepath, filename) };
-        }
+
+        const parent = global.configDir || process.cwd();
+        const filename = entry || 'index.ts';
+        const filepath = [
+            path.join(parent, filename),
+            path.join(parent, 'src', filename),
+            path.join(parent, 'index.ts'),
+            path.join(parent, 'src', 'index.ts'),
+            path.join(parent, 'index.js'),
+            path.join(parent, 'src', 'index.js'),
+        ].find(filepath => fs.existsSync(filepath));
+
+        return { [main]: filepath || path.join(parent, filename) };
     }
     return entry;
 }
@@ -125,7 +132,7 @@ async function getLoaders() {
         { name: 'bfun/dev' },
         { name: 'bfun/build' },
         { name: 'bfun/deploy' },
-        { name: 'bfun/publish', args: ['-h', '--help', 'publish'] },
+        { name: 'bfun/publish', args: [ '-h', '--help', 'publish' ] },
     ];
     const value = await getValue('loaders', loaders);
     if (value instanceof Array && value.length) return value;

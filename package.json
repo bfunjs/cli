@@ -1,6 +1,6 @@
 {
   "name": "@bfun/cli",
-  "version": "3.2.1",
+  "version": "3.2.8",
   "description": "@bfun/cli",
   "workspaces": [
     "packages/*"
@@ -35,13 +35,13 @@
   "dependencies": {
     "@bfun/fetch": "1",
     "@bfun/runtime": "1",
-    "@bfun/solution-component": "1",
-    "@bfun/solution-package": "1",
     "@bfun/utils": "1",
+    "chalk": "4",
     "chokidar": "3",
     "colors": "1",
     "commander": "3",
     "compare-versions": "3",
+    "cross-spawn": "7",
     "download-git-repo": "2",
     "handlebars": ">=4.0.14",
     "inquirer": "7",
@@ -56,12 +56,12 @@
     "write-json": "3"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-json": "4",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "@types/node": "^13.13.5",
     "eslint": "6",
     "rollup": "latest",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript2": "^0.27.1",
     "typescript": "3",
     "vuepress": "1"

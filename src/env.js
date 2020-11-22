@@ -5,13 +5,13 @@ const currentVersion = childProcess.execSync('node --version').toString().trim()
 const minNodeVersion = '8.9.0';
 
 if (compareVersions(currentVersion, minNodeVersion) < 1) {
-    console.error(`bfun-cli 需要 Node.js 版本在 ${minNodeVersion}+`.red);
+    console.error(`@bfun/cli 需要 Node.js 版本在 ${minNodeVersion}+`.red);
     process.exit(1);
 }
 
 process.env.NODE_ENV = 'production';
-process.env.DEBUG = true;
-process.env.isLocal = false;
+process.env.DEBUG = 'true';
+process.env.isLocal = 'false';
 
 global.version = require('../package.json').version;
 global.bConfig = require('../b.config');
@@ -35,5 +35,3 @@ process.on('unhandledRejection', reason => {
         process.exit(1);
     }
 });
-
-

@@ -1,5 +1,5 @@
 const path = require('path');
-const cp = require('child_process');
+const spawn = require('cross-spawn');
 const md5 = require('md5');
 const compareVersions = require('compare-versions');
 const inquirer = require('inquirer');
@@ -9,6 +9,7 @@ const { fetch } = require('@bfun/fetch');
 const { FileSystem } = require('@bfun/utils');
 
 const { name, version } = require('../../package.json');
+const { getValue } = require('./common');
 const { logger } = require('./logger');
 
 function cleanDir(filepath) {
@@ -40,8 +41,7 @@ function bfunRequire(name) {
         try {
             return require(`../../loaders/${name.slice(5)}`);
         } catch (e) {
-            console.error('bfun-cli require error:'.red);
-            console.error(e);
+            logger.error('@bfun/cli require failed:', e);
             process.exit(1);
         }
     } else if (name.indexOf('//') >= 0) {
@@ -51,23 +51,43 @@ function bfunRequire(name) {
         const file = new FileSystem.File(filepath);
         if (file.exists()) return safeRequire(filepath);
 
-        console.error('bfun-cli require error:'.red);
-        console.error(name);
+        logger.error('@bfun/cli require failed:', name);
         process.exit(1);
     }
+}
+
+async function installDependency({ cwd, name }) {
+    const command = await getValue('command', 'npm');
+    const registry = await getValue('registry', 'https://registry.npm.taobao.org');
+    return new Promise((resolve, reject) => {
+        const args = [ 'install', name ];
+        if (registry) args.push(`--registry=${registry}`);
+        const child = spawn(command, args, { cwd, stdio: [ 'pipe', process.stdout, process.stderr ] });
+        child.once('close', (code) => {
+            if (code !== 0) {
+                reject({ command: `${command} ${args.join(' ')}` });
+                return;
+            }
+            resolve();
+        });
+        child.once('error', reject);
+    });
 }
 
 async function installAndRequire(name) {
     const index = name.lastIndexOf('@');
     const pluginName = index > 0 ? name.slice(index) : name;
+    const { rootDir } = global;
     let pluginPath;
     try {
-        pluginPath = require.resolve(pluginName, { paths: [global.rootDir] });
+        pluginPath = require.resolve(pluginName, { paths: [ rootDir ] });
     } catch (e) {
-        cp.execSync(`npm install ${name}`);
-        pluginPath = require.resolve(pluginName, { paths: [global.rootDir] });
+        await installDependency({ cwd: rootDir, name });
+        const pkgPath = path.resolve(rootDir, 'node_modules', pluginName, 'package.json');
+        const pkgJson = safeRequire(pkgPath);
+        pluginPath = path.resolve(rootDir, 'node_modules', pluginName, pkgJson.main);
     }
-    return safeRequire(pluginPath);
+    return require(pluginPath);
 }
 
 async function findPort(port) {
@@ -82,13 +102,13 @@ async function checkLatestVersion() {
         const res = await fetch({ url });
         const { version: latest = '' } = res.data;
         if (compareVersions(version, latest) < 0) {
-            console.log();
-            console.warn(`@bfun/cli 最新版本 ${latest}，当前版本 ${version}`.yellow);
-            console.warn('执行命令 npm i @bfun/cli@latest -g 更新至最新版本'.yellow);
-            console.log();
+            logger.line();
+            logger.warn(`@bfun/cli 最新版本 ${latest}，当前版本 ${version}`);
+            logger.warn('执行命令 npm i @bfun/cli@latest -g 更新至最新版本');
+            logger.line();
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 }
 
@@ -134,6 +154,7 @@ module.exports = {
     cleanDir,
     safeRequire,
     bfunRequire,
+    installDependency,
     installAndRequire,
     findPort,
     checkLatestVersion,

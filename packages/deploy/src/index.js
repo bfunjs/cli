@@ -13,14 +13,14 @@ async function deploy(ctx, next) {
     await execBfunSolutions(ctx, next, command);
 }
 
-export const when = [command];
+export const when = [ command ];
 
 export function bfun(use) {
     use(command).option('-c, --config [config]', 'config filepath');
     return {
         [command]: {
-            before: [initEnv, readBConfig],
-            execute: [deploy],
+            before: [ initEnv, readBConfig ],
+            execute: [ deploy ],
         },
     };
 }

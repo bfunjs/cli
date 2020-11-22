@@ -1,6 +1,6 @@
 import path from 'path';
-import rollupCommonjs from 'rollup-plugin-commonjs';
-import rollupResolve from 'rollup-plugin-node-resolve';
+import rollupCommonjs from '@rollup/plugin-commonjs';
+import rollupResolve from '@rollup/plugin-node-resolve';
 import rollupJson from '@rollup/plugin-json';
 
 if (!process.env.TARGET) {

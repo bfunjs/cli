@@ -4,7 +4,7 @@ const { Middleware } = require('@bfun/runtime');
 const { checkLatestVersion, logger, bfunRequire, getLoaders } = require('./common');
 
 async function exec(lifecycle, name, opts, args) {
-    logger.log(chalk.blod(chalk.green(`当前 @bfun/cli 版本为：${global.version}`)));
+    logger.log(chalk.bold(chalk.green(`当前 @bfun/cli 版本为：${global.version}`)));
 
     const ctx = { name, opts, args };
     if (lifecycle.before) await lifecycle.before.run(ctx);
@@ -33,13 +33,13 @@ module.exports = async () => {
         const loader = bfunRequire(name);
         if (!loader || typeof loader !== 'object') continue;
         const { bfun, when = [] } = loader;
-        if (when && ['-h', '--help', ...when].indexOf(command) < 0) continue;
+        if (when && [ '-h', '--help', ...when ].indexOf(command) < 0) continue;
 
         const { [command]: actions } = await bfun(useFn);
         if (typeof actions !== 'object') continue;
-        ['before', 'execute', 'after'].map(key => {
+        [ 'before', 'execute', 'after' ].map(key => {
             if (!lifecycle[key]) lifecycle[key] = new Middleware();
-            const list = actions[key] instanceof Array ? actions[key] : [actions[key]];
+            const list = actions[key] instanceof Array ? actions[key] : [ actions[key] ];
             list.map(fn => typeof fn === 'function' && lifecycle[key].use(fn));
         });
     }

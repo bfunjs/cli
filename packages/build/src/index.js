@@ -13,17 +13,18 @@ async function build(ctx, next) {
     await execBfunSolutions(ctx, next, command);
 }
 
-export const when = [command];
+export const when = [ command ];
 
 export function bfun(use) {
     use(command).option('-c, --config [config]', 'config filepath')
         .option('--type [type]', 'build type, default: function')
         .option('--vue [vue]', 'build type [vue]')
-        .option('--react [react]', 'build type [react]');
+        .option('--react [react]', 'build type [react]')
+        .option('--watch [watch]', 'watch file change');
     return {
         [command]: {
-            before: [initEnv, readBConfig],
-            execute: [build],
+            before: [ initEnv, readBConfig ],
+            execute: [ build ],
         },
     };
 }

@@ -22,14 +22,14 @@ async function login(ctx, next) {
     await next();
 }
 
-export const when = [command];
+export const when = [ command ];
 
 export function bfun(use) {
     use(command);
     return {
         [command]: {
             before: [],
-            execute: [login],
+            execute: [ login ],
         },
     };
 }

@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const { Middleware } = require('@bfun/runtime');
 
 const { installAndRequire } = require('./shared');
@@ -9,7 +10,7 @@ function parseSolutionName(name) {
 }
 
 async function loadBfunSolutions(args, framework, parent) {
-    const list = args instanceof Array ? args : [args];
+    const list = args instanceof Array ? args : [ args ];
     let solutions = parent || [];
 
     for (const value of list) {
@@ -21,22 +22,20 @@ async function loadBfunSolutions(args, framework, parent) {
         const { solution, ...options } = config;
         if (solutions.findIndex(v => v.solution === solution) >= 0) continue;
 
-        const init = await installAndRequire(solution);
-        if (typeof init === 'function') {
-            solutions.push({ solution, options, init });
-        } else if (typeof init === 'object') {
-            let { extensions, required } = init;
+        const configuration = await installAndRequire(solution);
+        if (typeof configuration === 'object') {
+            let { extensions, required } = configuration;
             if (!parent && required instanceof Array) {
                 if (required.indexOf(framework) < 0) continue;
             }
-            if (typeof extensions === 'string') extensions = [extensions];
+            if (typeof extensions === 'string') extensions = [ extensions ];
             if (extensions instanceof Array) {
                 extensions = extensions.filter(extension => typeof extension === 'string');
                 if (extensions.length > 0) solutions = await loadBfunSolutions(extensions, framework, solutions);
             }
-            solutions.push({ solution, options, ...init });
+            solutions.push({ ...configuration, solution, options, name: config.solution });
         } else {
-            logger.error('invalid solution :', solution);
+            logger.error('solution configuration should be an object :', solution);
             process.exit(-1);
         }
     }
@@ -63,7 +62,8 @@ async function execBfunSolutions(ctx, next, command) {
     const initial = new Middleware();
     const handler = new Middleware();
     let solutionOptions = {};
-    bfunSolutions.map(({ solution, options, init, [command]: exec }) => {
+    bfunSolutions.map(({ name, version, solution, options, init, [command]: exec }) => {
+        logger.log(chalk.bold(chalk.green(`${name}: ${version}`)));
         if (typeof init === 'function') initial.use(initFn(solution, init, options));
         if (typeof exec === 'function') handler.use(initFn(solution, exec, options, command));
         if (typeof options === 'object') solutionOptions = Object.assign(solutionOptions, options);

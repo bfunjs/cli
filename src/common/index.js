@@ -1,6 +1,6 @@
 module.exports = {
-    ...require('./b.common'),
+    ...require('./common'),
     ...require('./logger'),
     ...require('./shared'),
-    ...require('./b.solution'),
+    ...require('./solution'),
 };

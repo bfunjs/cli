@@ -63,7 +63,7 @@ async function run(ctx, next) {
                 fs.writeFileSync(file.path, result);
             }
         };
-        const globs = ['**/*.*', '!node_modules/**', '!.git/**', '!.idea/**'];
+        const globs = [ '**/*.*', '!node_modules/**', '!.git/**', '!.idea/**' ];
         const data = ctx.data || {};
         await file.each(globs, (file, cb) => {
             callback(file, data);
@@ -98,18 +98,18 @@ async function afterPage(ctx, next) {
     WriteJson.sync(packageFile, packageJson);
 }
 
-export const when = [command, 'init'];
+export const when = [ command, 'init' ];
 
 export function bfun(use) {
     use(command);
     return {
         [command]: {
-            before: [pre],
-            execute: [run],
-            after: [afterPage],
+            before: [ pre ],
+            execute: [ run ],
+            after: [ afterPage ],
         },
         init: {
-            after: [afterPage],
+            after: [ afterPage ],
         },
     };
 }
