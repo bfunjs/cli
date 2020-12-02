@@ -74,7 +74,7 @@ async function autoDetectConfig(ctx) {
 }
 
 function autoDetectJsEntry(target, options = {}) {
-    const { main = 'main' } = options;
+    const { main = 'index' } = options;
     let entry = (typeof target === 'object' && Object.keys(target).length < 1) ? undefined : target;
     if (!entry || typeof entry === 'string') {
         if (typeof entry === 'string') {
