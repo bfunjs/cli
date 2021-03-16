@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import rollupCommonjs from '@rollup/plugin-commonjs';
 import rollupResolve from '@rollup/plugin-node-resolve';
@@ -8,11 +9,12 @@ if (!process.env.TARGET) {
 }
 
 const target = process.env.TARGET;
-const lang = process.env.LANG;
 const packageDir = path.resolve(__dirname, 'packages', target);
+const tsEntryPath = path.resolve(packageDir, 'src/index.ts');
+const jsEntryPath = path.resolve(packageDir, 'src/index.js');
 
 export default {
-    input: path.resolve(packageDir, `src/index.${lang || 'js'}`),
+    input: fs.existsSync(tsEntryPath) ? tsEntryPath : jsEntryPath,
     output: {
         file: path.resolve(__dirname, `loaders/${target}.js`),
         format: 'cjs'

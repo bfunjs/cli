@@ -1,5 +1,5 @@
-.idea
-.templates
+.idea/
+.github/
 dist
 node_modules
 lib

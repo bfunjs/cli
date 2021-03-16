@@ -1,12 +1,13 @@
 {
   "name": "@bfun/cli",
-  "version": "3.2.8",
+  "version": "3.2.9",
   "description": "@bfun/cli",
   "workspaces": [
     "packages/*"
   ],
   "main": "src/common/index.js",
   "scripts": {
+    "test": "npm run lint",
     "lint": "eslint .",
     "clean": "rimraf loaders",
     "build": "npm run clean && node ./scripts/build.js",
@@ -48,6 +49,7 @@
     "lodash": "4",
     "map-stream": "0",
     "md5": "2",
+    "npm-packlist": "^2.1.4",
     "ora": "4",
     "portfinder": "1",
     "rimraf": "3",

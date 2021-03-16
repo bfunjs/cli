@@ -1,10 +1,10 @@
 .idea/
-.templates
+.github/
 dist
-docs
-packages
-scripts
-tests
+docs/
+packages/
+scripts/
+tests/
 .eslintignore
 .eslintrc.js
 .gitignore
