@@ -1,6 +1,6 @@
 {
   "name": "@bfun/cli",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "description": "@bfun/cli",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -11,7 +11,7 @@
     "watch": "npm run clean && tsc --watch",
     "build": "npm run clean && tsc",
     "cli:beta": "npm publish --access=public --tag=beta",
-    "cli:release": "npm run build && npm publish --access public",
+    "cli:release": "npm publish --access public",
     "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "prepublish": "npm run build"
