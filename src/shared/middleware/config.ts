@@ -3,10 +3,10 @@ import { existsSync } from 'fs';
 import { logger } from '../logger';
 import { filename } from '../../config';
 
-function findModuleIfExists(name: string) {
+function existsModule(name: string): boolean {
     try {
         const { rootDir } = global;
-        return require.resolve(name, { paths: [ rootDir ] });
+        return !!require.resolve(name, { paths: [ rootDir ] });
     } catch (e) {
         return false;
     }
@@ -36,13 +36,16 @@ async function autoDetectConfig(ctx: any) {
         solutions: [ '@bfun/solution-webpack4-standard' ],
     };
 
-    if (findModuleIfExists('webpack')) {
+    if (existsModule(defaultBConfig.framework)) {
         return defaultBConfig;
-    } else if (findModuleIfExists('rollup')) {
-        return {
+    } else {
+        const rollupBConfig = {
             framework: 'rollup',
             solutions: [ '@bfun/solution-rollup2' ],
         };
+        if (existsModule(rollupBConfig.framework)) {
+            return rollupBConfig;
+        }
     }
     return defaultBConfig;
 }
@@ -62,11 +65,11 @@ export async function readConfig(ctx: any, next: any) {
     if (existsSync(filepath)) {
         ctx.bConfig = require(filepath);
     } else {
-        ctx.bConfig = autoDetectConfig(ctx);
+        ctx.bConfig = await autoDetectConfig(ctx);
     }
 
     if (typeof ctx.bConfig !== 'object') {
-        logger.error('b.config.js must be an Object.');
+        logger.error('b.config.js export must be an Object.');
         process.exit(1);
     }
 

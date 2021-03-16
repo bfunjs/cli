@@ -53,5 +53,5 @@ export function watch() {
 export async function start() {
     await checkCliVersion();
 
-    new Application().execute();
+    return new Application().execute();
 }

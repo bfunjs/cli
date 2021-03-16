@@ -6,6 +6,6 @@ import sInit from './init';
 import sLogin from './login';
 import sPage from './page';
 import sPublish from './publish';
-// import sPackage from './package';
+import sPackage from './package';
 
-export default [ sCore, sDev, sBuild, sDeploy, sLogin, sInit, sPage, sPublish ];
+export default [ sCore, sDev, sBuild, sDeploy, sLogin, sInit, sPage, sPublish, sPackage ];

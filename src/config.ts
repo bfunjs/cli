@@ -1,6 +1,5 @@
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
-// @ts-ignore
 import { get, set } from 'lodash';
 // @ts-ignore
 import WriteJson from 'write-json';

@@ -27,10 +27,7 @@ async function packDir(rootDir: string) {
             },
         )
             .pipe(createWriteStream('Ver.1.0.1.tar'))
-            .on('finish', () => {
-                console.log('pack', files);
-                resolve(files);
-            });
+            .on('finish', () => resolve(files));
     });
 }
 
