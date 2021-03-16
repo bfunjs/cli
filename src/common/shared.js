@@ -150,7 +150,22 @@ async function getAnswers(ctx, list, data) {
     }
 }
 
+function compile(tmpl, data) {
+    const now = new Date();
+    const ctx = {
+        'YYYY': now.getFullYear(),
+        'MM': `0${now.getMonth() + 1}`.slice(-2),
+        'mm': now.getMonth() + 1,
+        'DD': `0${now.getDate()}`.slice(-2),
+        'dd': now.getDate(),
+        'HASH': md5(Date.now().toString(16)).slice(0, 8),
+        ...data,
+    };
+    return tmpl.replace(/{{(.*?)}}/g, (match, key) => ctx[key.trim()] || '');
+}
+
 module.exports = {
+    compile,
     cleanDir,
     safeRequire,
     bfunRequire,
