@@ -1,20 +1,20 @@
 {
   "name": "@bfun/cli",
-  "version": "3.2.10",
+  "version": "4.0.1",
   "description": "@bfun/cli",
-  "workspaces": [
-    "packages/*"
-  ],
-  "main": "src/common/index.js",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
-    "test": "npm run lint",
     "lint": "eslint .",
-    "clean": "rimraf loaders",
-    "build": "npm run clean && node ./scripts/build.js",
+    "clean": "rimraf lib",
+    "watch": "npm run clean && tsc --watch",
+    "build": "npm run clean && tsc",
     "cli:beta": "npm publish --access=public --tag=beta",
-    "release": "npm run build && npm publish --access public",
+    "cli:release": "npm run build && npm publish --access public",
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "prepublish": "npm run build"
   },
   "bin": {
     "bfun": "./bin/bfun"
@@ -34,22 +34,21 @@
   },
   "homepage": "https://github.com/bfunjs/cli#readme",
   "dependencies": {
-    "@bfun/fetch": "1",
-    "@bfun/runtime": "1",
+    "@bfun/fetch": "^1.1.0",
+    "@bfun/runtime": "^1.0.4",
     "@bfun/utils": "1",
     "chalk": "4",
     "chokidar": "3",
     "colors": "1",
-    "commander": "3",
     "compare-versions": "3",
     "cross-spawn": "7",
-    "download-git-repo": "2",
     "handlebars": ">=4.0.14",
     "inquirer": "7",
     "lodash": "4",
     "map-stream": "0",
     "md5": "2",
     "npm-packlist": "^2.1.4",
+    "optimist": "^0.6.1",
     "ora": "4",
     "portfinder": "1",
     "rimraf": "3",
@@ -58,15 +57,17 @@
     "write-json": "3"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^15.1.0",
-    "@rollup/plugin-json": "4",
-    "@rollup/plugin-node-resolve": "^9.0.0",
-    "@types/node": "^13.13.5",
-    "eslint": "6",
-    "rollup": "latest",
-    "rollup-plugin-typescript2": "^0.27.1",
-    "typescript": "3",
-    "vuepress": "1"
+    "@types/cross-spawn": "^6.0.2",
+    "@types/inquirer": "^7.3.1",
+    "@types/lodash": "^4.14.168",
+    "@types/md5": "^2.3.0",
+    "@types/node": "^14.14.32",
+    "@types/npm-packlist": "^1.1.1",
+    "@types/optimist": "^0.0.29",
+    "@types/tar-fs": "^2.0.0",
+    "eslint": "^7.21.0",
+    "typescript": "^4.2.3",
+    "vuepress": "^1.8.2"
   },
   "lint-staged": {
     "*.js": [

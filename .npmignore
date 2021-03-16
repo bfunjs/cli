@@ -1,13 +1,10 @@
 .idea/
 .github/
-dist
+dist/
 docs/
-packages/
-scripts/
-tests/
+__tests__/
 .eslintignore
 .eslintrc.js
 .gitignore
 .npmignore
-rollup.config.js
 tsconfig.json

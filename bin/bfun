@@ -2,10 +2,8 @@
 
 require('colors');
 
-require('../src/env.js');
+const { initEnv, start, watch } = require('../lib/start');
 
-if (process.send) {
-    require('../src')();
-} else {
-    require('./start.js')();
-}
+initEnv();
+
+process.send ? start() : watch();
