@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "baseUrl": "./",
+    "rootDir": "src",
+    "outDir": "lib",
+    "strict": true,
     "target": "es5",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -11,17 +15,19 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "declaration": true,
+    "esModuleInterop": true,
     "lib": [
       "es2015",
       "dom"
     ]
   },
   "include": [
-    "packages/bfun/**/*"
+    "global.d.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "lib"
   ],
   "compileOnSave": false
 }
