@@ -1,6 +1,6 @@
 {
   "name": "@bfun/cli",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "description": "@bfun/cli",
   "main": "lib/index.js",
   "module": "lib/index.js",

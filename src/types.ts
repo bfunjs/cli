@@ -15,11 +15,19 @@ export interface InitObj {
 
 export type Use = (command: string, lifecycle: InitObj) => any;
 
+export interface Plugin {
+    required: string[];
+    version?: string;
+    extensions: string[];
+
+    [key: string]: any;
+}
+
 /**
  * b.config.js 文件内配置的 solution 属性
  */
 export interface Solution {
-    name: string;
+    name: string | Plugin;
     ssr?: boolean;
 
     [key: string]: any;

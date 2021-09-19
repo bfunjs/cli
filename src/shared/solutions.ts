@@ -25,12 +25,17 @@ export async function loadSolutions(framework: string, solutions: (string | Solu
         let config = typeof item === 'string' ? { name: item } : item;
 
         if (typeof config !== 'object') continue;
-        config.name = parseSolutionName(config.name);
-
         const { name, ...options } = config;
-        if (allSolutions.findIndex(v => v.name === name) >= 0) continue;
+        let configuration;
 
-        const configuration = await installAndRequire(name);
+        if (typeof name === 'string') {
+            config.name = parseSolutionName(name);
+            if (allSolutions.findIndex(v => v.name === name) >= 0) continue;
+            configuration = await installAndRequire(name);
+        } else {
+            configuration = name;
+        }
+
         if (typeof configuration === 'object') {
             let { extensions, required } = configuration;
             if (!parent && required instanceof Array) {
