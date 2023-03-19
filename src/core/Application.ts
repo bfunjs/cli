@@ -1,41 +1,50 @@
-import optimist from 'optimist';
 import { Middleware } from '@bfun/runtime';
+import { logger } from '../shared/logger';
+import { readConfig } from '../shared/middleware/config';
+import { execAll } from '../shared/solutions';
 
-import { Context, InitObj, Lifecycle, Use } from './types';
-import scripts from './scripts';
-import { logger } from './shared/logger';
-import { execAll } from './shared/solutions';
-import { readConfig } from './shared/middleware/config';
+import { InitObj, Lifecycle, Use } from '../types';
+import { Context } from './Context';
 
 export class Application {
-    private readonly command: string;
-    private readonly args: string[];
-    private readonly opts: { [key: string]: string };
     private readonly lifecycle: Lifecycle;
-    private notMatched: boolean;
+
+    private readonly ctx: Context;
 
     constructor(command?: string) {
-        const { _: args, ...opts } = optimist.argv;
-
-        this.args = args || [];
-        this.opts = opts || {};
-        this.command = command || this.args[0] || '';
-        this.notMatched = true;
+        this.ctx = new Context();
 
         this.lifecycle = {
             before: new Middleware(),
             execute: new Middleware(),
             after: new Middleware(),
         };
+    }
 
-        if (!this.command && (this.opts.v || this.opts.version)) {
-            console.log(global.version);
-            return;
-        } else {
-            logger.green('当前', global.name, '版本为：', global.version).line();
-        }
+    async initPresets() {
+        console.log(this.ctx);
+    }
 
-        scripts.map(init => init(this.register));
+    async initPlugins() {
+
+    }
+
+    async resolveConfig() {
+
+    }
+
+    async runCommand() {
+
+    }
+
+    async run() {
+        // await this.init();
+        await this.initPresets();
+        await this.initPlugins();
+        await this.resolveConfig();
+        await this.runCommand();
+
+        // todo runCommand
     }
 
     async execute() {

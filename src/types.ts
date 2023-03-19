@@ -49,26 +49,3 @@ export interface BConfig {
 
     [key: string]: any;
 }
-
-/**
- * Compose Context
- */
-export interface Context {
-    name: string;
-    args: string[];
-    opts: { [key: string]: string | number | boolean };
-    help: object[];
-
-    [key: string]: any;
-}
-
-export interface BContext extends Context {
-    bConfig: BConfig;
-
-    solution: {
-        skip: string[];
-        options: { [key: string]: any };
-
-        [key: string]: any;
-    }
-}

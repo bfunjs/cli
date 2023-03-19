@@ -2,8 +2,6 @@
 
 require('colors');
 
-const { initEnv, start, watch } = require('../lib/start');
-
-initEnv();
+const { start, watch } = require('../lib/start');
 
 process.send ? start() : watch();

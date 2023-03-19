@@ -6,7 +6,7 @@ const { name, version } = require('../../package.json');
 
 export async function checkCliVersion() {
     try {
-        const url = `http://registry.npm.taobao.org/${name}/latest`;
+        const url = `https://registry.npm.taobao.org/${name}/latest`;
         const res = await fetch({ url });
         const { version: latest = '' } = res.data;
         if (cv(version, latest) < 0) {
