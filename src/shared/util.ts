@@ -1,8 +1,10 @@
 import md5 from 'md5';
 
-export function compile(tmpl: string, data: any = {}) {
+type TemplateData = Record<string, number | string>;
+
+export function compile(tmpl: string, data: TemplateData = {}) {
   const now = new Date();
-  const ctx = {
+  const ctx: TemplateData = {
     DD: `0${now.getDate()}`.slice(-2),
     dd: now.getDate(),
     HASH: md5(Date.now().toString(16)).slice(0, 8),
@@ -11,7 +13,9 @@ export function compile(tmpl: string, data: any = {}) {
     YYYY: now.getFullYear(),
     ...data,
   };
-  return tmpl.replaceAll(/{{(.*?)}}/g, (match, key) => ctx[key.trim()] || '');
+  return tmpl.replaceAll(/{{(.*?)}}/g, (_match: string, key: string) =>
+    String(ctx[key.trim()] ?? ''),
+  );
 }
 
 export function toCamel(name: string) {
