@@ -4,7 +4,6 @@ import { BaseCommand } from '../extend/command.js';
 import { writeLoginConfig } from '../shared/config.js';
 import { logger } from '../shared/logger.js';
 
-type ReadlineInterface = readline.Interface;
 type ReadlineIterator = AsyncIterableIterator<string>;
 
 export default class Login extends BaseCommand<typeof Login> {
@@ -21,17 +20,9 @@ export default class Login extends BaseCommand<typeof Login> {
 
     try {
       const lineIterator = rl[Symbol.asyncIterator]();
-      const accessKey = await this.promptRequired(
-        rl,
-        lineIterator,
-        'accessKey',
-      );
-      const secretKey = await this.promptRequired(
-        rl,
-        lineIterator,
-        'secretKey',
-      );
-      const apiUrl = await this.promptInput(rl, lineIterator, '请输入 apiUrl');
+      const accessKey = await this.promptRequired(lineIterator, 'accessKey');
+      const secretKey = await this.promptRequired(lineIterator, 'secretKey');
+      const apiUrl = await this.promptInput(lineIterator, '请输入 apiUrl');
 
       writeLoginConfig({ accessKey, apiUrl, secretKey });
       logger.success('登录配置已保存');
@@ -41,23 +32,20 @@ export default class Login extends BaseCommand<typeof Login> {
   }
 
   private async promptInput(
-    rl: ReadlineInterface,
     lineIterator: ReadlineIterator,
     question: string,
   ): Promise<string> {
-    rl.setPrompt(`${question}: `);
-    rl.prompt();
+    process.stdout.write(`${question}: `);
 
     const { done, value } = await lineIterator.next();
     return done ? '' : value.trim();
   }
 
   private async promptRequired(
-    rl: ReadlineInterface,
     lineIterator: ReadlineIterator,
     fieldName: string,
   ): Promise<string> {
-    const value = await this.promptInput(rl, lineIterator, `请输入 ${fieldName}`);
+    const value = await this.promptInput(lineIterator, `请输入 ${fieldName}`);
     if (!value) {
       this.error(`${fieldName} 不能为空`);
     }
