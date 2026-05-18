@@ -1,0 +1,53 @@
+import { Uploader } from '@bfun/utils';
+
+import { IUploadConfig } from '../typings/index.js';
+
+const { AliYun, QiNiu } = Uploader;
+
+export async function uploadDir(options: IUploadConfig) {
+  const {
+    accessKey,
+    bucket,
+    cloudDir,
+    localDir,
+    region,
+    secretKey,
+    target = '',
+  } = options;
+  const debug = process.env.DEBUG === 'true';
+
+  switch (target) {
+    case 'AliYun': {
+      const uploader = new AliYun({
+        ACCESS_KEY: accessKey,
+        bucket: bucket || '',
+        debug,
+        region: region || '',
+        SECRET_KEY: secretKey,
+      });
+      await uploader.uploadDir(localDir, cloudDir);
+      return uploader;
+    }
+
+    // case 'QCloud': {
+    //     const uploader = new QCloud({});
+    //     await uploader.uploadDir(localDir, cloudDir);
+    //     break;
+    // }
+    case 'QiNiu': {
+      const uploader = new QiNiu({
+        ACCESS_KEY: accessKey,
+        bucket: bucket || '',
+        debug,
+        region: region || '',
+        SECRET_KEY: secretKey,
+      });
+      await uploader.uploadDir(localDir, cloudDir);
+      return uploader;
+    }
+
+    default: {
+      throw new Error('platform 设置错误，当前仅支持阿里云、腾讯云、七牛云');
+    }
+  }
+}

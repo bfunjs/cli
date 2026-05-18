@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/commands/login.ts","./src/commands/publish.ts","./src/constants/index.ts","./src/extend/command.ts","./src/shared/check.ts","./src/shared/config.ts","./src/shared/logger.ts","./src/shared/request.ts","./src/shared/upload.ts","./src/shared/util.ts","./src/typings/index.ts"],"version":"5.9.3"}

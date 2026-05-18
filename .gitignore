@@ -1,5 +1,11 @@
-.idea/
-.github/
-dist
-node_modules
-lib
+*-debug.log
+*-error.log
+**/.DS_Store
+/.idea
+/dist
+/tmp
+/node_modules
+oclif.manifest.json
+
+yarn.lock
+package-lock.json
