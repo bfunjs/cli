@@ -1,9 +1,0 @@
-#!/usr/bin/env node
-
-require('colors');
-
-const { initEnv, start, watch } = require('../lib/start');
-
-initEnv();
-
-process.send ? start() : watch();

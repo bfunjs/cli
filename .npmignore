@@ -3,7 +3,7 @@
 dist/
 docs/
 src/
-__tests__/
+test/
 .eslintignore
 .eslintrc.js
 .gitignore
