@@ -38,8 +38,8 @@ jobs:
         if: ${{ steps.version-check.outputs.skipped == 'false' }}
         id: oclif-readme
         run: |
-          pnpm install
-          pnpm exec oclif readme
+          npm ci
+          npm exec oclif readme
           if [ -n "$(git status --porcelain)" ]; then
             git add .
             git commit -am "chore: update README.md"
