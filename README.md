@@ -20,7 +20,7 @@ $ npm install -g @bfun/cli
 $ bfun COMMAND
 running command...
 $ bfun (--version)
-@bfun/cli/0.0.0 darwin-arm64 node-v24.14.0
+@bfun/cli/5.0.0 darwin-arm64 node-v24.14.0
 $ bfun --help [COMMAND]
 USAGE
   $ bfun COMMAND
@@ -29,9 +29,8 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`bfun hello PERSON`](#bfun-hello-person)
-* [`bfun hello world`](#bfun-hello-world)
 * [`bfun help [COMMAND]`](#bfun-help-command)
+* [`bfun login`](#bfun-login)
 * [`bfun plugins`](#bfun-plugins)
 * [`bfun plugins add PLUGIN`](#bfun-plugins-add-plugin)
 * [`bfun plugins:inspect PLUGIN...`](#bfun-pluginsinspect-plugin)
@@ -42,48 +41,7 @@ USAGE
 * [`bfun plugins uninstall [PLUGIN]`](#bfun-plugins-uninstall-plugin)
 * [`bfun plugins unlink [PLUGIN]`](#bfun-plugins-unlink-plugin)
 * [`bfun plugins update`](#bfun-plugins-update)
-
-## `bfun hello PERSON`
-
-Say hello
-
-```
-USAGE
-  $ bfun hello PERSON -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Who is saying hello
-
-DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ bfun hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
-```
-
-_See code: [src/commands/hello/index.ts](https://github.com/cli/suibinc/blob/v0.0.0/src/commands/hello/index.ts)_
-
-## `bfun hello world`
-
-Say hello world
-
-```
-USAGE
-  $ bfun hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ bfun hello world
-  hello world! (./src/commands/hello/world.ts)
-```
-
-_See code: [src/commands/hello/world.ts](https://github.com/cli/suibinc/blob/v0.0.0/src/commands/hello/world.ts)_
+* [`bfun publish [DIR]`](#bfun-publish-dir)
 
 ## `bfun help [COMMAND]`
 
@@ -103,7 +61,28 @@ DESCRIPTION
   Display help for bfun.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/6.2.46/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/6.2.49/src/commands/help.ts)_
+
+## `bfun login`
+
+保存 bfun 登录配置
+
+```
+USAGE
+  $ bfun login [-e dev|pre|prod]
+
+FLAGS
+  -e, --env=<option>  [default: prod] 命令行执行环境
+                      <options: dev|pre|prod>
+
+DESCRIPTION
+  保存 bfun 登录配置
+
+EXAMPLES
+  $ bfun login
+```
+
+_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.0.0/src/commands/login.ts)_
 
 ## `bfun plugins`
 
@@ -126,7 +105,7 @@ EXAMPLES
   $ bfun plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.63/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.68/src/commands/plugins/index.ts)_
 
 ## `bfun plugins add PLUGIN`
 
@@ -200,7 +179,7 @@ EXAMPLES
   $ bfun plugins inspect myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.63/src/commands/plugins/inspect.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.68/src/commands/plugins/inspect.ts)_
 
 ## `bfun plugins install PLUGIN`
 
@@ -249,7 +228,7 @@ EXAMPLES
     $ bfun plugins install someuser/someplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.63/src/commands/plugins/install.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.68/src/commands/plugins/install.ts)_
 
 ## `bfun plugins link PATH`
 
@@ -280,7 +259,7 @@ EXAMPLES
   $ bfun plugins link myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.63/src/commands/plugins/link.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.68/src/commands/plugins/link.ts)_
 
 ## `bfun plugins remove [PLUGIN]`
 
@@ -321,7 +300,7 @@ FLAGS
   --reinstall  Reinstall all plugins after uninstalling.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.63/src/commands/plugins/reset.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.68/src/commands/plugins/reset.ts)_
 
 ## `bfun plugins uninstall [PLUGIN]`
 
@@ -349,7 +328,7 @@ EXAMPLES
   $ bfun plugins uninstall myplugin
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.63/src/commands/plugins/uninstall.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.68/src/commands/plugins/uninstall.ts)_
 
 ## `bfun plugins unlink [PLUGIN]`
 
@@ -393,5 +372,30 @@ DESCRIPTION
   Update installed plugins.
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.63/src/commands/plugins/update.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/5.4.68/src/commands/plugins/update.ts)_
+
+## `bfun publish [DIR]`
+
+发布项目到云端
+
+```
+USAGE
+  $ bfun publish [DIR] [-f]
+
+ARGUMENTS
+  [DIR]  [default: .] 要发布的项目目录，默认为当前执行命令的目录
+
+FLAGS
+  -f, --force  强制发布，不检查版本
+
+DESCRIPTION
+  发布项目到云端
+
+EXAMPLES
+  $ bfun publish
+
+  $ bfun publish ./my-project
+```
+
+_See code: [src/commands/publish.ts](https://github.com/bfunjs/cli/blob/v5.0.0/src/commands/publish.ts)_
 <!-- commandsstop -->
