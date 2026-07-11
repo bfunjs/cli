@@ -27,7 +27,11 @@
     "version": "oclif readme && git add README.md"
   },
   "bin": {
-    "bfun": "./bin/run.js"
+    "bfun": "bin/run.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
   },
   "oclif": {
     "bin": "bfun",
