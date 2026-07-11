@@ -2,20 +2,46 @@ name: publish
 
 on:
   release:
-    types: [released]
+    types: [published]
+  workflow_run:
+    workflows: ["version, tag and github release"]
+    types: [completed]
+    branches: [release]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'release' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'release' && github.event.release.tag_name || 'release' }}
       - uses: actions/setup-node@v4
         with:
           node-version: latest
-      - run: npm install
-      - run: npm run build
-      - run: npm run prepack
+          registry-url: https://registry.npmjs.org
+      - name: Check npm version
+        id: npm-version
+        run: |
+          package_name=$(node -p "require('./package.json').name")
+          package_version=$(node -p "require('./package.json').version")
+
+          if npm view "$package_name@$package_version" version >/dev/null 2>&1; then
+            echo "Version $package_name@$package_version already exists on npm; skipping publish."
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "Version $package_name@$package_version does not exist on npm; publishing."
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
+      - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
+        run: npm install
+      - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
+        run: npm run build
+      - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
+        run: npm run prepack
       - uses: JS-DevTools/npm-publish@19c28f1ef146469e409470805ea4279d47c3d35c
+        if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
         with:
           token: ${{ secrets.NPM_TOKEN }}
-      - run: npm run postpack
+      - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
+        run: npm run postpack
