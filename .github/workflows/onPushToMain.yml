@@ -3,7 +3,7 @@ name: version, tag and github release
 
 on:
   push:
-    branches: [main]
+    branches: [release]
 
 jobs:
   release:
@@ -38,7 +38,7 @@ jobs:
         if: ${{ steps.version-check.outputs.skipped == 'false' }}
         id: oclif-readme
         run: |
-          npm ci
+          npm install
           npm exec oclif readme
           if [ -n "$(git status --porcelain)" ]; then
             git add .

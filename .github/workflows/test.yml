@@ -1,4 +1,5 @@
 name: tests
+
 on:
   push:
     branches-ignore: [main]
@@ -8,16 +9,14 @@ jobs:
   unit-tests:
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'windows-latest']
-        node_version: [lts/-1, lts/*, latest]
+        os: [ubuntu-latest, windows-latest]
+        node-version: [lts/*, latest]
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node_version }}
-          cache: npm
-      - run: npm ci
-      - run: npm run build
-      - run: npm run test
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run ci
