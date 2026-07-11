@@ -18,7 +18,7 @@ jobs:
           ref: ${{ github.event_name == 'release' && github.event.release.tag_name || 'release' }}
       - uses: actions/setup-node@v4
         with:
-          node-version: latest
+          node-version: 24
           registry-url: https://registry.npmjs.org
       - name: Check npm version
         id: npm-version
@@ -39,9 +39,10 @@ jobs:
         run: npm run build
       - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
         run: npm run prepack
-      - uses: JS-DevTools/npm-publish@19c28f1ef146469e409470805ea4279d47c3d35c
+      - name: Publish to npm
         if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
         run: npm run postpack
