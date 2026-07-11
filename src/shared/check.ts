@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { compareVersions } from 'compare-versions';
 import { readFileSync } from 'node:fs';
-import { URL } from 'node:url';
+import { resolve } from 'node:path';
 
 import { logger } from './logger.js';
 
 const pkg = JSON.parse(
-  readFileSync(new URL('../../package.json', import.meta.url), 'utf8'),
+  readFileSync(resolve(__dirname, '../../package.json'), 'utf8'),
 );
 
 export async function checkCliVersion() {

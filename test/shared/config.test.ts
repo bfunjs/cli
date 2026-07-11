@@ -1,94 +1,106 @@
-import { expect } from 'chai';
-import {
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const homedirMock = vi.hoisted(() => vi.fn());
+
+vi.mock('node:os', async importOriginal => ({
+  ...(await importOriginal<typeof import('node:os')>()),
+  homedir: homedirMock,
+}));
+
+const loggerMock = vi.hoisted(() => ({
+  error: vi.fn(),
+}));
+
+vi.mock('../../src/shared/logger.js', () => ({
+  logger: loggerMock,
+}));
+
+const { readBfunConfig, readCloudConfig, writeLoginConfig } = await import(
+  '../../src/shared/config.js'
+);
+
 describe('config', () => {
-  const originalHome = process.env.HOME;
   let homeDir: string;
+  let configPath: string;
 
   beforeEach(() => {
-    homeDir = mkdtempSync(join(tmpdir(), 'bfun-config-'));
-    process.env.HOME = homeDir;
+    homeDir = join(
+      tmpdir(),
+      `bfun-cli-config-test-${process.pid}-${Date.now()}`,
+    );
+    configPath = join(homeDir, '.bfun', 'config.json');
+    homedirMock.mockReturnValue(homeDir);
+    loggerMock.error.mockClear();
   });
 
   afterEach(() => {
-    if (originalHome === undefined) {
-      delete process.env.HOME;
-    } else {
-      process.env.HOME = originalHome;
-    }
-
     rmSync(homeDir, { force: true, recursive: true });
   });
 
-  it('saves login config to ~/.bfun/config.json', async () => {
-    const configPath = join(homeDir, '.bfun', 'config.json');
-    mkdirSync(join(homeDir, '.bfun'), { recursive: true });
-    writeFileSync(
-      configPath,
-      JSON.stringify({
-        baseUrl: 'https://old.example.com',
-        userId: 'user-id',
-      }),
-      'utf8',
+  it('throws when config file does not exist', () => {
+    expect(() => readBfunConfig()).toThrow('请先执行 bfun login');
+    expect(loggerMock.error).toHaveBeenCalledWith(
+      `配置文件不存在: ${configPath}`,
     );
-
-    const { writeLoginConfig } = await import('../../src/shared/config.js');
-
-    writeLoginConfig({
-      accessKey: 'test-ak',
-      apiUrl: 'https://api.example.com',
-      secretKey: 'test-sk',
-    });
-
-    expect(existsSync(configPath)).to.equal(true);
-
-    const config = JSON.parse(readFileSync(configPath, 'utf8'));
-    expect(config).to.deep.include({
-      accessKey: 'test-ak',
-      apiUrl: 'https://api.example.com',
-      secretKey: 'test-sk',
-    });
-    expect(config.userId).to.equal('user-id');
-    expect(config).to.not.have.property('baseUrl');
   });
 
-  it('removes apiUrl when login config receives an empty apiUrl', async () => {
-    const configPath = join(homeDir, '.bfun', 'config.json');
+  it('writes login config and removes legacy baseUrl/apiUrl when apiUrl is empty', () => {
     mkdirSync(join(homeDir, '.bfun'), { recursive: true });
     writeFileSync(
       configPath,
       JSON.stringify({
-        apiUrl: 'https://old-api.example.com',
-        baseUrl: 'https://old-base.example.com',
-        userId: 'user-id',
+        AliYun: { accessKey: 'ak1', secretKey: 'sk1' },
+        apiUrl: 'https://old.example.com',
+        baseUrl: 'https://legacy.example.com',
       }),
       'utf8',
     );
 
-    const { writeLoginConfig } = await import('../../src/shared/config.js');
-
     writeLoginConfig({
-      accessKey: 'test-ak',
+      accessKey: 'login-ak',
       apiUrl: '',
-      secretKey: 'test-sk',
+      secretKey: 'login-sk',
     });
 
-    const config = JSON.parse(readFileSync(configPath, 'utf8'));
-    expect(config).to.deep.include({
-      accessKey: 'test-ak',
-      secretKey: 'test-sk',
-      userId: 'user-id',
+    expect(JSON.parse(readFileSync(configPath, 'utf8'))).toEqual({
+      AliYun: { accessKey: 'ak1', secretKey: 'sk1' },
+      accessKey: 'login-ak',
+      secretKey: 'login-sk',
     });
-    expect(config).to.not.have.property('apiUrl');
-    expect(config).to.not.have.property('baseUrl');
+  });
+
+  it('reads target cloud config', () => {
+    mkdirSync(join(homeDir, '.bfun'), { recursive: true });
+    writeFileSync(
+      configPath,
+      JSON.stringify({
+        QiNiu: { accessKey: 'ak', secretKey: 'sk' },
+      }),
+      'utf8',
+    );
+
+    expect(readCloudConfig('QiNiu')).toEqual({
+      accessKey: 'ak',
+      secretKey: 'sk',
+    });
+  });
+
+  it('throws when target cloud config is incomplete', () => {
+    mkdirSync(join(homeDir, '.bfun'), { recursive: true });
+    writeFileSync(
+      configPath,
+      JSON.stringify({
+        AliYun: { accessKey: '', secretKey: 'sk' },
+      }),
+      'utf8',
+    );
+
+    expect(() => readCloudConfig('AliYun')).toThrow(
+      'accessKey 或 secretKey 为空',
+    );
   });
 });
