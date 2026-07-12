@@ -4,9 +4,16 @@ on:
   release:
     types: [published]
   workflow_run:
-    workflows: ["version, tag and github release"]
+    workflows: ['version, tag and github release']
     types: [completed]
     branches: [release]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -16,10 +23,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'release' && github.event.release.tag_name || 'release' }}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
+          cache: npm
       - name: Check npm version
         id: npm-version
         run: |
@@ -34,32 +42,11 @@ jobs:
             echo "should_publish=true" >> $GITHUB_OUTPUT
           fi
       - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
-        run: npm install
+        run: npm ci
       - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
         run: npm run build
-      - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
-        run: npm run prepack
-      - name: Diagnose npm authentication
-        if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "npm version: $(npm --version)"
-          echo "registry: $(npm config get registry)"
-          echo "user config: $(npm config get userconfig)"
-
-          if [ -z "$NODE_AUTH_TOKEN" ]; then
-            echo "::error::NPM_TOKEN secret is empty or unavailable to this workflow."
-            exit 1
-          fi
-
-          echo "NPM_TOKEN secret is available."
-          echo "Authenticated npm user: $(npm whoami --registry=https://registry.npmjs.org/)"
-          npm ping --registry=https://registry.npmjs.org/
       - name: Publish to npm
         if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - if: ${{ steps.npm-version.outputs.should_publish == 'true' }}
-        run: npm run postpack
