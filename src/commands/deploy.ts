@@ -270,6 +270,7 @@ export default class Deploy extends Command {
     const input = process.stdin;
     const output = process.stdout;
     const hadRawMode = input.isRaw;
+    const wasPaused = input.isPaused();
 
     readline.emitKeypressEvents(input);
     input.setRawMode(true);
@@ -297,6 +298,7 @@ export default class Deploy extends Command {
       const cleanup = () => {
         input.off('keypress', onKeypress);
         input.setRawMode(hadRawMode);
+        if (wasPaused) input.pause();
         output.write('\n');
       };
 
