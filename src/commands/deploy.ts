@@ -87,7 +87,7 @@ export default class Deploy extends Command {
       /\/\/+/g,
       '/',
     );
-    logger.info(`正在上传 dist 目录到云端 ${$cloudDir} ...`);
+    logger.info(`正在上传 dist 目录到云端 ${$cloudDir}`);
 
     await uploadDir({
       accessKey,
@@ -270,7 +270,6 @@ export default class Deploy extends Command {
     const input = process.stdin;
     const output = process.stdout;
     const hadRawMode = input.isRaw;
-    const wasPaused = input.isPaused();
 
     readline.emitKeypressEvents(input);
     input.setRawMode(true);
@@ -298,7 +297,7 @@ export default class Deploy extends Command {
       const cleanup = () => {
         input.off('keypress', onKeypress);
         input.setRawMode(hadRawMode);
-        if (wasPaused) input.pause();
+        input.pause();
         output.write('\n');
       };
 
