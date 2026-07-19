@@ -1,6 +1,6 @@
 {
   "name": "@bfun/cli",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "@bfun/cli",
   "keywords": [
     "@bfun/cli"
@@ -34,6 +34,9 @@
     "registry": "https://registry.npmjs.org"
   },
   "oclif": {
+    "additionalVersionFlags": [
+      "-v"
+    ],
     "bin": "bfun",
     "commands": "./dist/commands",
     "dirname": "bfun",
