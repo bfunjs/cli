@@ -3,12 +3,13 @@ import { resolve } from 'node:path';
 
 import { logger } from '../shared/logger.js';
 import {
+  createPublicPath,
   isUmiProject,
   readProjectCredentials,
   updateUmiPublicPath,
 } from '../shared/project.js';
 import { fetchConfig } from '../shared/request.js';
-import { compile } from '../shared/util';
+import { compile } from '../shared/util.js';
 
 export default class Init extends Command {
   static override args = {
@@ -36,11 +37,11 @@ export default class Init extends Command {
     }
 
     logger.info('正在获取应用配置 ...');
-    const { publicPath } = await fetchConfig({ appId, token });
+    const { sourceDir, sourceUrl } = await fetchConfig({ appId, token });
 
     updateUmiPublicPath(
       projectDir,
-      compile(publicPath, {
+      compile(createPublicPath(sourceUrl, sourceDir), {
         appId,
         version,
       }),

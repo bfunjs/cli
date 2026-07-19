@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import {
+  createPublicPath,
   isUmiProject,
   normalizePublicPath,
   readProjectCredentials,
@@ -63,6 +64,21 @@ describe('project config', () => {
   it('normalizes publicPath with one trailing slash', () => {
     expect(normalizePublicPath('https://cdn.example.com/app///')).toBe(
       'https://cdn.example.com/app/',
+    );
+  });
+
+  it('creates publicPath from sourceUrl and sourceDir', () => {
+    expect(
+      createPublicPath('https://cdn.example.com///', '/app/A1/1.2.3/'),
+    ).toBe('https://cdn.example.com/app/A1/1.2.3/');
+    expect(createPublicPath('//cdn.example.com', 'assets')).toBe(
+      '//cdn.example.com/assets/',
+    );
+  });
+
+  it('rejects an empty sourceUrl or sourceDir', () => {
+    expect(() => createPublicPath('', '/app/')).toThrow(
+      'sourceUrl 或 sourceDir 为空',
     );
   });
 

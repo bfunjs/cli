@@ -20,7 +20,7 @@ $ npm install -g @bfun/cli
 $ bfun COMMAND
 running command...
 $ bfun (--version|-v)
-@bfun/cli/5.2.0 linux-x64 node-v24.18.0
+@bfun/cli/5.2.1 darwin-arm64 node-v24.14.0
 $ bfun --help [COMMAND]
 USAGE
   $ bfun COMMAND
@@ -40,10 +40,13 @@ USAGE
 
 ```
 USAGE
-  $ bfun deploy [DIR]
+  $ bfun deploy [DIR] [--dist <value>]
 
 ARGUMENTS
   [DIR]  [default: .] 要部署的项目目录，默认为当前执行命令的目录
+
+FLAGS
+  --dist=<value>  [default: dist] 要上传的构建产物目录，相对于项目目录，默认为 dist
 
 DESCRIPTION
   部署项目到云端
@@ -52,9 +55,11 @@ EXAMPLES
   $ bfun deploy
 
   $ bfun deploy ./my-project
+
+  $ bfun deploy ./my-project --dist build
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/bfunjs/cli/blob/v5.2.0/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/bfunjs/cli/blob/v5.2.1/src/commands/deploy.ts)_
 
 ## `bfun init [DIR]`
 
@@ -76,7 +81,7 @@ EXAMPLES
   $ bfun init ./my-project
 ```
 
-_See code: [src/commands/init.ts](https://github.com/bfunjs/cli/blob/v5.2.0/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/bfunjs/cli/blob/v5.2.1/src/commands/init.ts)_
 
 ## `bfun login`
 
@@ -97,7 +102,7 @@ EXAMPLES
   $ bfun login
 ```
 
-_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.2.0/src/commands/login.ts)_
+_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.2.1/src/commands/login.ts)_
 
 ## `bfun semver [DIR]`
 
@@ -119,5 +124,5 @@ EXAMPLES
   $ bfun semver ./my-project
 ```
 
-_See code: [src/commands/semver.ts](https://github.com/bfunjs/cli/blob/v5.2.0/src/commands/semver.ts)_
+_See code: [src/commands/semver.ts](https://github.com/bfunjs/cli/blob/v5.2.1/src/commands/semver.ts)_
 <!-- commandsstop -->

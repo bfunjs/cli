@@ -102,6 +102,19 @@ export function normalizePublicPath(publicPath: string): string {
   return `${value.replace(/\/+$/, '')}/`;
 }
 
+/** Join an asset origin and directory without damaging URL protocol slashes. */
+export function createPublicPath(sourceUrl: string, sourceDir: string): string {
+  const url = typeof sourceUrl === 'string' ? sourceUrl.trim() : '';
+  const dir = typeof sourceDir === 'string' ? sourceDir.trim() : '';
+  if (!url || !dir) {
+    throw new Error('接口返回的 sourceUrl 或 sourceDir 为空');
+  }
+
+  return normalizePublicPath(
+    `${url.replace(/\/+$/, '')}/${dir.replace(/^\/+/, '')}`,
+  );
+}
+
 function quote(value: string, quotationMark: string): string {
   const escaped = value
     .replaceAll('\\', '\\\\')

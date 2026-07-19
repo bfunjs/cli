@@ -20,9 +20,8 @@ export interface IProviderConfig {
 
 export interface IAppConfig {
   provider: IProviderConfig;
-  localDir: string;
-  cloudDir: string;
-  publicPath: string;
+  sourceDir: string;
+  sourceUrl: string;
 }
 
 interface IUpdateConfigRequest {
@@ -58,7 +57,7 @@ function resolveConfig(): {
 /**
  * 接口通过 GET 请求，query 参数传入 appId 和 token
  * 返回格式: { code: 0, data: applicationData }，其中 applicationData
- * 包含 localDir、cloudDir、publicPath 和 provider，其中 provider 包含云存储配置及访问凭证
+ * 包含 sourceDir、sourceUrl 和 provider，其中 provider 包含云存储配置及访问凭证
  */
 export async function fetchConfig({
   appId,
@@ -83,10 +82,10 @@ export async function fetchConfig({
     throw new Error('获取配置失败: 返回数据中缺少 data 字段');
   }
 
-  const { localDir, cloudDir, provider, publicPath } = data;
-  if (!cloudDir || !provider || typeof provider !== 'object') {
+  const { provider, sourceDir, sourceUrl } = data;
+  if (!sourceDir || !sourceUrl || !provider || typeof provider !== 'object') {
     throw new Error(
-      '获取配置失败: 返回数据中缺少必要字段 (cloudDir, provider)',
+      '获取配置失败: 返回数据中缺少必要字段 (sourceDir, sourceUrl, provider)',
     );
   }
 
@@ -105,9 +104,8 @@ export async function fetchConfig({
 
   return {
     provider: { accessKey, bucket, provider: providerName, region, secretKey },
-    localDir,
-    cloudDir,
-    publicPath,
+    sourceDir,
+    sourceUrl,
   };
 }
 

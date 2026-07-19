@@ -10,12 +10,12 @@ export enum EnvEnum {
 export interface IUploadConfig {
   accessKey: string;
   bucket: string;
-  cloudDir: string;
   context: Record<string, string>;
+  distDir: string;
   globals: Record<string, string[]>;
-  localDir: string;
   region: string;
   secretKey: string;
+  sourceDir: string;
   // 目标位置
   provider: string;
 }

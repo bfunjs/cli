@@ -31,8 +31,6 @@ describe('fetchConfig', () => {
 
   it('returns deployment credentials from the application data payload', async () => {
     const deploymentConfig = {
-      cloudDir: 'release',
-      localDir: 'dist',
       provider: {
         accessKey: 'deploy-ak',
         bucket: 'bucket',
@@ -40,7 +38,8 @@ describe('fetchConfig', () => {
         region: 'oss-cn-hangzhou',
         secretKey: 'deploy-sk',
       },
-      publicPath: '/',
+      sourceDir: '/name/{{appId}}/{{version}}/',
+      sourceUrl: 'https://src.example.com',
     };
     axiosMock.get.mockResolvedValue({
       data: { code: 0, data: deploymentConfig },
@@ -55,6 +54,24 @@ describe('fetchConfig', () => {
         headers: { ak: 'request-ak', sk: 'request-sk' },
         params: { appId: 'A1', token: 'token' },
       },
+    );
+  });
+
+  it('rejects the removed deployment fields without source fields', async () => {
+    axiosMock.get.mockResolvedValue({
+      data: {
+        code: 0,
+        data: {
+          cloudDir: 'release',
+          localDir: 'dist',
+          provider: {},
+          publicPath: '/',
+        },
+      },
+    });
+
+    await expect(fetchConfig({ appId: 'A1', token: 'token' })).rejects.toThrow(
+      'sourceDir, sourceUrl, provider',
     );
   });
 });

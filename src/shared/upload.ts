@@ -8,10 +8,10 @@ export async function uploadDir(options: IUploadConfig) {
   const {
     accessKey,
     bucket,
-    cloudDir,
-    localDir,
+    distDir,
     region,
     secretKey,
+    sourceDir,
     provider = '',
   } = options;
   const debug = process.env.DEBUG === 'true';
@@ -25,13 +25,13 @@ export async function uploadDir(options: IUploadConfig) {
         region: region || '',
         SECRET_KEY: secretKey,
       });
-      await uploader.uploadDir(localDir, cloudDir);
+      await uploader.uploadDir(distDir, sourceDir);
       return uploader;
     }
 
     // case 'QCloud': {
     //     const uploader = new QCloud({});
-    //     await uploader.uploadDir(localDir, cloudDir);
+    //     await uploader.uploadDir(distDir, sourceDir);
     //     break;
     // }
     case 'QiNiu': {
@@ -42,7 +42,7 @@ export async function uploadDir(options: IUploadConfig) {
         region: region || '',
         SECRET_KEY: secretKey,
       });
-      await uploader.uploadDir(localDir, cloudDir);
+      await uploader.uploadDir(distDir, sourceDir);
       return uploader;
     }
 
