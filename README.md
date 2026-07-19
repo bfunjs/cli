@@ -20,7 +20,7 @@ $ npm install -g @bfun/cli
 $ bfun COMMAND
 running command...
 $ bfun (--version)
-@bfun/cli/5.0.0 linux-x64 node-v22.23.1
+@bfun/cli/5.0.1 darwin-arm64 node-v24.14.0
 $ bfun --help [COMMAND]
 USAGE
   $ bfun COMMAND
@@ -29,5 +29,52 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`bfun deploy [DIR]`](#bfun-deploy-dir)
+* [`bfun login`](#bfun-login)
 
+## `bfun deploy [DIR]`
+
+部署项目到云端
+
+```
+USAGE
+  $ bfun deploy [DIR] [-f]
+
+ARGUMENTS
+  [DIR]  [default: .] 要部署的项目目录，默认为当前执行命令的目录
+
+FLAGS
+  -f, --force  强制部署，不检查版本
+
+DESCRIPTION
+  部署项目到云端
+
+EXAMPLES
+  $ bfun deploy
+
+  $ bfun deploy ./my-project
+```
+
+_See code: [src/commands/deploy.ts](https://github.com/bfunjs/cli/blob/v5.0.1/src/commands/deploy.ts)_
+
+## `bfun login`
+
+保存 bfun 登录配置
+
+```
+USAGE
+  $ bfun login [-e dev|pre|prod]
+
+FLAGS
+  -e, --env=<option>  [default: prod] 命令行执行环境
+                      <options: dev|pre|prod>
+
+DESCRIPTION
+  保存 bfun 登录配置
+
+EXAMPLES
+  $ bfun login
+```
+
+_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.0.1/src/commands/login.ts)_
 <!-- commandsstop -->

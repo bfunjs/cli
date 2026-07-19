@@ -19,9 +19,8 @@ vi.mock('../../src/shared/logger.js', () => ({
   logger: loggerMock,
 }));
 
-const { readBfunConfig, readCloudConfig, writeLoginConfig } = await import(
-  '../../src/shared/config.js'
-);
+const { readBfunConfig, writeLoginConfig } =
+  await import('../../src/shared/config.js');
 
 describe('config', () => {
   let homeDir: string;
@@ -48,7 +47,7 @@ describe('config', () => {
     );
   });
 
-  it('writes login config and removes legacy baseUrl/apiUrl when apiUrl is empty', () => {
+  it('writes only login config and removes legacy cloud config', () => {
     mkdirSync(join(homeDir, '.bfun'), { recursive: true });
     writeFileSync(
       configPath,
@@ -67,40 +66,8 @@ describe('config', () => {
     });
 
     expect(JSON.parse(readFileSync(configPath, 'utf8'))).toEqual({
-      AliYun: { accessKey: 'ak1', secretKey: 'sk1' },
       accessKey: 'login-ak',
       secretKey: 'login-sk',
     });
-  });
-
-  it('reads target cloud config', () => {
-    mkdirSync(join(homeDir, '.bfun'), { recursive: true });
-    writeFileSync(
-      configPath,
-      JSON.stringify({
-        QiNiu: { accessKey: 'ak', secretKey: 'sk' },
-      }),
-      'utf8',
-    );
-
-    expect(readCloudConfig('QiNiu')).toEqual({
-      accessKey: 'ak',
-      secretKey: 'sk',
-    });
-  });
-
-  it('throws when target cloud config is incomplete', () => {
-    mkdirSync(join(homeDir, '.bfun'), { recursive: true });
-    writeFileSync(
-      configPath,
-      JSON.stringify({
-        AliYun: { accessKey: '', secretKey: 'sk' },
-      }),
-      'utf8',
-    );
-
-    expect(() => readCloudConfig('AliYun')).toThrow(
-      'accessKey 或 secretKey 为空',
-    );
   });
 });

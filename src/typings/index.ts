@@ -17,5 +17,5 @@ export interface IUploadConfig {
   region: string;
   secretKey: string;
   // 目标位置
-  target: string;
+  provider: string;
 }

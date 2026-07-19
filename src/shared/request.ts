@@ -10,11 +10,19 @@ interface IConfigRequest {
   token: string;
 }
 
-export interface IAppConfig {
+export interface IProviderConfig {
+  accessKey: string;
   bucket: string;
-  prefix: string;
+  provider: string;
   region: string;
-  target: string;
+  secretKey: string;
+}
+
+export interface IAppConfig {
+  provider: IProviderConfig;
+  localDir: string;
+  cloudDir: string;
+  publicPath: string;
 }
 
 interface IUpdateConfigRequest {
@@ -49,7 +57,8 @@ function resolveConfig(): {
 
 /**
  * 接口通过 GET 请求，query 参数传入 appId 和 token
- * 返回格式: { code: 0, data: application }，其中 application.data 包含 bucket、prefix、region、target 等字段
+ * 返回格式: { code: 0, data: applicationData }，其中 applicationData
+ * 包含 prefix 和 provider，其中 provider 包含云存储配置及访问凭证
  */
 export async function fetchConfig({
   appId,
@@ -57,34 +66,49 @@ export async function fetchConfig({
 }: IConfigRequest): Promise<IAppConfig> {
   if (!appId || !token) throw new Error('appId and token must be provided');
 
-  const { accessKey, baseUrl, secretKey } = resolveConfig();
+  const { accessKey: ak, baseUrl, secretKey: sk } = resolveConfig();
   const url = `${baseUrl}/open/v1/application/data`;
 
   logger.info(`正在请求配置: ${url}`);
 
   const response = await axios.get(url, {
-    headers: { ak: accessKey, sk: secretKey },
+    headers: { ak, sk },
     params: { appId, token },
   });
 
-  console.log(response);
   const { code, data, message } = response.data;
   if (code !== 0) {
     throw new Error(`获取配置失败: ${message ?? '未知错误'}`);
   }
 
-  if (!data?.data) {
+  if (!data || typeof data !== 'object') {
     throw new Error('获取配置失败: 返回数据中缺少 data 字段');
   }
 
-  const { bucket, prefix, region, target } = data.data;
-  if (!bucket || !prefix || !region || !target) {
+  const { localDir, cloudDir, provider, publicPath } = data;
+  if (!cloudDir || !provider || typeof provider !== 'object') {
+    throw new Error('获取配置失败: 返回数据中缺少必要字段 (prefix, provider)');
+  }
+
+  const {
+    accessKey,
+    bucket,
+    provider: providerName,
+    region,
+    secretKey,
+  } = provider;
+  if (!accessKey || !bucket || !providerName || !region || !secretKey) {
     throw new Error(
-      '获取配置失败: 返回数据中缺少必要字段 (bucket, prefix, region, target)',
+      '获取配置失败: provider 中缺少必要字段 (accessKey, secretKey, bucket, provider, region)',
     );
   }
 
-  return { bucket, prefix, region, target };
+  return {
+    provider: { accessKey, bucket, provider: providerName, region, secretKey },
+    localDir,
+    cloudDir,
+    publicPath,
+  };
 }
 
 /**

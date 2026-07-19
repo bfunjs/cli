@@ -12,11 +12,11 @@ export async function uploadDir(options: IUploadConfig) {
     localDir,
     region,
     secretKey,
-    target = '',
+    provider = '',
   } = options;
   const debug = process.env.DEBUG === 'true';
 
-  switch (target) {
+  switch (provider) {
     case 'AliYun': {
       const uploader = new AliYun({
         ACCESS_KEY: accessKey,
