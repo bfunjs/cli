@@ -31,7 +31,8 @@ describe('fetchConfig', () => {
 
   it('returns deployment credentials from the application data payload', async () => {
     const deploymentConfig = {
-      prefix: 'release',
+      cloudDir: 'release',
+      localDir: 'dist',
       provider: {
         accessKey: 'deploy-ak',
         bucket: 'bucket',
@@ -39,6 +40,7 @@ describe('fetchConfig', () => {
         region: 'oss-cn-hangzhou',
         secretKey: 'deploy-sk',
       },
+      publicPath: '/',
     };
     axiosMock.get.mockResolvedValue({
       data: { code: 0, data: deploymentConfig },
