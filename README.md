@@ -20,7 +20,7 @@ $ npm install -g @bfun/cli
 $ bfun COMMAND
 running command...
 $ bfun (--version|-v)
-@bfun/cli/5.0.4 linux-x64 node-v24.18.0
+@bfun/cli/5.1.0 darwin-arm64 node-v24.14.0
 $ bfun --help [COMMAND]
 USAGE
   $ bfun COMMAND
@@ -30,6 +30,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`bfun deploy [DIR]`](#bfun-deploy-dir)
+* [`bfun init [DIR]`](#bfun-init-dir)
 * [`bfun login`](#bfun-login)
 
 ## `bfun deploy [DIR]`
@@ -55,7 +56,29 @@ EXAMPLES
   $ bfun deploy ./my-project
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/bfunjs/cli/blob/v5.0.4/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/bfunjs/cli/blob/v5.1.0/src/commands/deploy.ts)_
+
+## `bfun init [DIR]`
+
+获取应用配置并设置项目的 Umi publicPath
+
+```
+USAGE
+  $ bfun init [DIR]
+
+ARGUMENTS
+  [DIR]  [default: .] 要初始化的项目目录，默认为当前执行命令的目录
+
+DESCRIPTION
+  获取应用配置并设置项目的 Umi publicPath
+
+EXAMPLES
+  $ bfun init
+
+  $ bfun init ./my-project
+```
+
+_See code: [src/commands/init.ts](https://github.com/bfunjs/cli/blob/v5.1.0/src/commands/init.ts)_
 
 ## `bfun login`
 
@@ -76,5 +99,5 @@ EXAMPLES
   $ bfun login
 ```
 
-_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.0.4/src/commands/login.ts)_
+_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.1.0/src/commands/login.ts)_
 <!-- commandsstop -->
