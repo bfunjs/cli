@@ -8,6 +8,7 @@ import {
   createPublicPath,
   isUmiProject,
   normalizePublicPath,
+  readIndexTemplate,
   readProjectCredentials,
   updateUmiPublicPath,
 } from '../../src/shared/project.js';
@@ -59,6 +60,18 @@ describe('project config', () => {
     expect(() => readProjectCredentials(projectDir)).toThrow(
       'package.json 中缺少 version 字段',
     );
+  });
+
+  it('reads index.html from the deployment output as template content', () => {
+    const distDir = join(projectDir, 'dist');
+    mkdirSync(distDir);
+    writeFileSync(join(distDir, 'index.html'), '<main>app</main>\n', 'utf8');
+
+    expect(readIndexTemplate(distDir)).toBe('<main>app</main>\n');
+  });
+
+  it('omits the template when the deployment output has no index.html', () => {
+    expect(readIndexTemplate(join(projectDir, 'dist'))).toBeUndefined();
   });
 
   it('normalizes publicPath with one trailing slash', () => {

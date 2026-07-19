@@ -85,6 +85,12 @@ export function readProjectCredentials(
   return { appId, token, version };
 }
 
+/** Read the built index page when the deployment output contains one. */
+export function readIndexTemplate(distDir: string): string | undefined {
+  const indexPath = resolve(distDir, 'index.html');
+  return existsSync(indexPath) ? readFileSync(indexPath, 'utf8') : undefined;
+}
+
 /**
  * Umi expects publicPath to end with a slash so that asset URLs concatenate
  * correctly.

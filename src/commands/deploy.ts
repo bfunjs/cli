@@ -3,7 +3,10 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { logger } from '../shared/logger.js';
-import { readProjectCredentials } from '../shared/project.js';
+import {
+  readIndexTemplate,
+  readProjectCredentials,
+} from '../shared/project.js';
 import { fetchConfig, updateConfig } from '../shared/request.js';
 import { uploadDir } from '../shared/upload.js';
 import { compile } from '../shared/util.js';
@@ -83,6 +86,7 @@ export default class Deploy extends Command {
 
     // 步骤 4：调用 updateConfig 更新配置
     logger.info('正在更新迭代配置 ...');
+    const template = readIndexTemplate(distDir);
     const result = await updateConfig({
       appId,
       iterationData: {
@@ -90,6 +94,7 @@ export default class Deploy extends Command {
         provider,
         region,
         sourceDir: compiledSourceDir,
+        ...(template === undefined ? {} : { template }),
         version,
       },
       iterationName: version,

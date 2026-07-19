@@ -1,4 +1,5 @@
 import md5 from 'md5';
+import { randomBytes } from 'node:crypto';
 
 type TemplateData = Record<string, number | string>;
 
@@ -8,6 +9,8 @@ export function compile(tmpl: string, data: TemplateData = {}) {
     DD: `0${now.getDate()}`.slice(-2),
     dd: now.getDate(),
     HASH: md5(Date.now().toString(16)).slice(0, 8),
+    hash6: randomBytes(3).toString('hex'),
+    hash8: randomBytes(4).toString('hex'),
     MM: `0${now.getMonth() + 1}`.slice(-2),
     mm: now.getMonth() + 1,
     YYYY: now.getFullYear(),

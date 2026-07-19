@@ -19,6 +19,14 @@ describe('compile', () => {
   it('replaces missing placeholders with an empty string', () => {
     expect(compile('hello {{ missing }}')).toBe('hello ');
   });
+
+  it('provides random hexadecimal hash6 and hash8 placeholders', () => {
+    const result = compile('{{hash6}}/{{hash8}}');
+    const [hash6, hash8] = result.split('/');
+
+    expect(hash6).toMatch(/^[\da-f]{6}$/);
+    expect(hash8).toMatch(/^[\da-f]{8}$/);
+  });
 });
 
 describe('toCamel', () => {
