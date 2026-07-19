@@ -69,8 +69,6 @@ export async function fetchConfig({
   const { accessKey: ak, baseUrl, secretKey: sk } = resolveConfig();
   const url = `${baseUrl}/open/v1/application/data`;
 
-  logger.info(`正在请求配置: ${url}`);
-
   const response = await axios.get(url, {
     headers: { ak, sk },
     params: { appId, token },
@@ -132,8 +130,6 @@ export async function updateConfig({
   const { accessKey, baseUrl, secretKey } = resolveConfig();
   const url = `${baseUrl}/open/v1/application/data`;
 
-  logger.info(`正在更新配置: ${url}`);
-
   const response = await axios.post(
     url,
     {
@@ -147,7 +143,7 @@ export async function updateConfig({
 
   const { code, message } = response.data;
   if (code !== 0) {
-    logger.warn(`配置更新失败: ${message ?? '未知错误'}`);
+    logger.warn(`配置更新失败(${code}): ${message ?? '未知错误'}`);
     return { success: false };
   }
 

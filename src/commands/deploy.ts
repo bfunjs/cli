@@ -62,7 +62,7 @@ export default class Deploy extends Command {
     logger.success(`最新部署版本: ${newVersion}`);
 
     // 步骤 2：调用 fetchConfig 获取云存储配置和访问凭证
-    logger.info('正在获取部署配置 ...');
+    logger.info('正在获取应用部署配置 ...');
     const {
       localDir,
       cloudDir,
@@ -103,7 +103,7 @@ export default class Deploy extends Command {
     logger.success(`上传完成 - 版本 ${newVersion} 已部署到 ${provider}`);
 
     // 步骤 4：调用 updateConfig 更新配置
-    logger.info('正在更新配置 ...');
+    logger.info('正在更新迭代配置 ...');
     const result = await updateConfig({
       appId,
       iterationData: {
@@ -117,9 +117,9 @@ export default class Deploy extends Command {
       token,
     });
     if (result.success) {
-      logger.success('配置更新成功');
+      logger.success('迭代配置更新成功');
     } else {
-      logger.warn('配置更新失败，但部署已完成');
+      logger.error('迭代配置更新失败，但构建文件已上传');
     }
 
     // 步骤 4.1：上传成功后，将新的版本号更新到读取时的 package.json 中
@@ -404,7 +404,7 @@ export default class Deploy extends Command {
       writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8');
       logger.success(`版本号已更新: ${oldVersion} → ${newVersion}`);
     } catch (error: unknown) {
-      logger.warn(
+      logger.error(
         `版本号写回失败: ${error instanceof Error ? error.message : error}`,
       );
     }
