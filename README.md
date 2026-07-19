@@ -20,7 +20,7 @@ $ npm install -g @bfun/cli
 $ bfun COMMAND
 running command...
 $ bfun (--version|-v)
-@bfun/cli/5.2.1 darwin-arm64 node-v24.14.0
+@bfun/cli/5.2.1 linux-x64 node-v24.18.0
 $ bfun --help [COMMAND]
 USAGE
   $ bfun COMMAND
