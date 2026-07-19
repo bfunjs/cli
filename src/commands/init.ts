@@ -3,10 +3,12 @@ import { resolve } from 'node:path';
 
 import { logger } from '../shared/logger.js';
 import {
+  isUmiProject,
   readProjectCredentials,
   updateUmiPublicPath,
 } from '../shared/project.js';
 import { fetchConfig } from '../shared/request.js';
+import { compile } from '../shared/util';
 
 export default class Init extends Command {
   static override args = {
@@ -23,18 +25,25 @@ export default class Init extends Command {
 
   public async run(): Promise<void> {
     const { args } = await this.parse(Init);
-    console.log(args);
-    console.log();
     const projectDir = resolve(args.dir);
 
     logger.info(`项目目录: ${projectDir}`);
-    const { appId, token } = readProjectCredentials(projectDir);
+    const { appId, token, version } = readProjectCredentials(projectDir);
+
+    if (!isUmiProject(projectDir)) {
+      logger.info('当前项目不是 Umi 项目，跳过配置初始化');
+      return;
+    }
 
     logger.info('正在获取应用配置 ...');
     const { publicPath } = await fetchConfig({ appId, token });
-    const result = updateUmiPublicPath(projectDir, publicPath);
 
-    logger.success(`publicPath 已设置为 ${result.publicPath}`);
-    logger.success(`Umi 配置已更新: ${result.configPath}`);
+    updateUmiPublicPath(
+      projectDir,
+      compile(publicPath, {
+        appId,
+        version,
+      }),
+    );
   }
 }
