@@ -20,7 +20,7 @@ $ npm install -g @bfun/cli
 $ bfun COMMAND
 running command...
 $ bfun (--version|-v)
-@bfun/cli/5.2.2 linux-x64 node-v24.18.0
+@bfun/cli/5.2.3 linux-x64 node-v24.18.0
 $ bfun --help [COMMAND]
 USAGE
   $ bfun COMMAND
@@ -59,7 +59,7 @@ EXAMPLES
   $ bfun deploy ./my-project --dist build
 ```
 
-_See code: [src/commands/deploy.ts](https://github.com/bfunjs/cli/blob/v5.2.2/src/commands/deploy.ts)_
+_See code: [src/commands/deploy.ts](https://github.com/bfunjs/cli/blob/v5.2.3/src/commands/deploy.ts)_
 
 ## `bfun init [DIR]`
 
@@ -81,7 +81,7 @@ EXAMPLES
   $ bfun init ./my-project
 ```
 
-_See code: [src/commands/init.ts](https://github.com/bfunjs/cli/blob/v5.2.2/src/commands/init.ts)_
+_See code: [src/commands/init.ts](https://github.com/bfunjs/cli/blob/v5.2.3/src/commands/init.ts)_
 
 ## `bfun login`
 
@@ -102,7 +102,7 @@ EXAMPLES
   $ bfun login
 ```
 
-_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.2.2/src/commands/login.ts)_
+_See code: [src/commands/login.ts](https://github.com/bfunjs/cli/blob/v5.2.3/src/commands/login.ts)_
 
 ## `bfun semver [DIR]`
 
@@ -124,5 +124,5 @@ EXAMPLES
   $ bfun semver ./my-project
 ```
 
-_See code: [src/commands/semver.ts](https://github.com/bfunjs/cli/blob/v5.2.2/src/commands/semver.ts)_
+_See code: [src/commands/semver.ts](https://github.com/bfunjs/cli/blob/v5.2.3/src/commands/semver.ts)_
 <!-- commandsstop -->
