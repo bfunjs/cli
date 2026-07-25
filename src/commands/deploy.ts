@@ -51,6 +51,7 @@ export default class Deploy extends Command {
     // 步骤 2：调用 fetchConfig 获取云存储配置和访问凭证
     logger.info('正在获取应用部署配置 ...');
     const {
+      template,
       sourceDir,
       provider: { accessKey, bucket, provider, region, secretKey },
     } = await fetchConfig({
@@ -86,7 +87,6 @@ export default class Deploy extends Command {
 
     // 步骤 4：调用 updateConfig 更新配置
     logger.info('正在更新迭代配置 ...');
-    const template = readIndexTemplate(distDir);
     const result = await updateConfig({
       appId,
       iterationData: {
@@ -94,10 +94,10 @@ export default class Deploy extends Command {
         provider,
         region,
         sourceDir: compiledSourceDir,
-        ...(template === undefined ? {} : { template }),
+        ...(template ? { template: readIndexTemplate(distDir, template) } : {}),
         version,
       },
-      iterationName: version,
+      iterationName: `本地构建_v${version}`,
       token,
     });
     if (result.success) {

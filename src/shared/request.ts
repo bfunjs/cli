@@ -22,6 +22,7 @@ export interface IAppConfig {
   provider: IProviderConfig;
   sourceDir: string;
   sourceUrl: string;
+  template?: string;
 }
 
 interface IUpdateConfigRequest {
@@ -82,7 +83,7 @@ export async function fetchConfig({
     throw new Error('获取配置失败: 返回数据中缺少 data 字段');
   }
 
-  const { provider, sourceDir, sourceUrl } = data;
+  const { provider, sourceDir, sourceUrl, template } = data;
   if (!sourceDir || !sourceUrl || !provider || typeof provider !== 'object') {
     throw new Error(
       '获取配置失败: 返回数据中缺少必要字段 (sourceDir, sourceUrl, provider)',
@@ -106,6 +107,7 @@ export async function fetchConfig({
     provider: { accessKey, bucket, provider: providerName, region, secretKey },
     sourceDir,
     sourceUrl,
+    template,
   };
 }
 

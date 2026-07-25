@@ -86,8 +86,11 @@ export function readProjectCredentials(
 }
 
 /** Read the built index page when the deployment output contains one. */
-export function readIndexTemplate(distDir: string): string | undefined {
-  const indexPath = resolve(distDir, 'index.html');
+export function readIndexTemplate(
+  distDir: string,
+  template?: string,
+): string | undefined {
+  const indexPath = resolve(distDir, template || 'index.html');
   return existsSync(indexPath) ? readFileSync(indexPath, 'utf8') : undefined;
 }
 
